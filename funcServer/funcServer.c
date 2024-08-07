@@ -15,6 +15,30 @@
 #include "rawSocket.h"
 #include "utils.h"
 
+int receivePacketNT(int sok, struct sockaddr_ll end, struct frame *frame, unsigned char *buffer){//No timeout
+    socklen_t addr_len = sizeof(struct sockaddr);
+    unsigned char* awnserBuffer = (unsigned char*) malloc(sizeof(struct frame));
+    memset(awnserBuffer, 0, sizeof(struct frame));
+    struct frame* awnserFrame = (struct frame*) awnserBuffer;
+    int notSent;
+
+    do{
+        recvfrom(sok, buffer, sizeof(struct frame), 0, (struct sockaddr*)&end, &addr_len);
+        if((frame->start_marker != START_MARKER)){//Se os Starter markers diferirem, recebeu lixo, tenta receber frame novamente
+            notSent = 1;
+        } else if(frame->crc != crc8((unsigned char*)frame, sizeof(struct frame) - 1)){//Se os crc8 diferirem, a mensagem veio com erro, envia nack e espera a próxima
+            notSent = 1;
+            sendNACK(sok, end, frame->seq, awnserFrame, awnserBuffer);
+        } else {//Se estiver tudo como esperado, recebe o pacote e envia ack
+            notSent = 0;
+            sendACK(sok, end, frame->seq, awnserFrame, awnserBuffer);
+        }
+    }while(notSent);
+
+    free(awnserBuffer);
+    return 1;
+}
+
 int sendVidList(int socket, struct sockaddr_ll end, struct frame *frame, unsigned char *buffer){
     struct dirent* in_file;
     DIR* dir;

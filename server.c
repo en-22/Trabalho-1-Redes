@@ -24,7 +24,7 @@ int main(){
     struct frame* frame = (struct frame*) buffer;
     frame->seq = 0;
     for (;;){//Sempre recebendo
-        receivePacket(sock, end, frame, buffer);
+        receivePacketNT(sock, end, frame, buffer);
 
         switch(frame->type){
             case LISTAR:

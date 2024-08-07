@@ -2,6 +2,7 @@
 #define _SERVER_H_
 
 #include "utils.h"
+int receivePacketNT(int sok, struct sockaddr_ll end, struct frame *frame, unsigned char *buffer);//Receive sem timeout
 //Retorna 0 se a lista estiver vazia ou o diretorio nao abrir e 1 no sucesso de envio
 int sendVidList(int socket, struct sockaddr_ll end, struct frame *frame, unsigned char *buffer);
 //Retorna 1 no sucesso de envio e 0 no fracasso (TIMEOUT)

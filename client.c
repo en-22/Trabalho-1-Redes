@@ -32,7 +32,8 @@ int main(){
         switch(opt){
             case 1:
                 mountPacket(frame, frame->seq++, LISTAR, data, MAX_DATA_LENGTH);//Pede para listar videos
-                sendPacket(sock, end, buffer);
+                if(sendPacket(sock, end, buffer) == TIMEOUT)//Se não houver resposta, volta ao menu
+                    continue;
                 if((receiveNames(sock, end, frame, buffer)) == 0)//Se não há videos, volta ao menu
                     continue;
 
@@ -41,7 +42,8 @@ int main(){
                     scanf("%63s", video);
                     memcpy(data, video, strlen(video));
                     mountPacket(frame, frame->seq++, BAIXAR, data, strlen(video));
-                    sendPacket(sock, end, buffer);
+                    if(sendPacket(sock, end, buffer) == TIMEOUT)//Se não houver resposta, volta ao menu
+                        continue;
 
                     size = receiveDescription(sock, end, frame, buffer);
 
@@ -52,7 +54,7 @@ int main(){
 
                     if(checkDiskUsage(size)){
                         sendACK(sock, end, 0, frame, buffer);//Aceita receber video
-                        printf("Baixando...\n");
+                        printf("\nBaixando...\n");
                         receiveVideo(sock, end, frame, video, size, buffer);
                     } else{
                         printf("Não há espaço suficiente no disco\n");
