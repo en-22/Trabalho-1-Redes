@@ -63,6 +63,7 @@ int main(){
                 }
                 break;
             case 2:
+                free(buffer);
                 printf("Adeus.\n");//Fecha o client
                 return 0;
             default:
