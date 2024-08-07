@@ -13,6 +13,7 @@ funcClient - Funções relacionadas ao cliente.
   showMenu
 
 funcServer - Funções relacionadas ao servidor.
+  recievePacketNT
   sendVidList
   sendVideo
   sendDescription
@@ -29,5 +30,10 @@ utils - Funções basicas para envio de frames, verificação de pacotes, entre 
   waitforACK
 
 Os videos disponiveis devem ser salvos no diretorio 'videos'.
+Informações sobre as funções estão dentro dos arquivos.
+"make" cria ambos os executaveis ./client e ./server. Mais informações dentro do arquivo makefile.
 
+Ao ser ligado, o servidor recebe mensagens continuamente ate ser parado.
 Se o servidor não estiver em execução, todas as chamadas do cliente resultarão em timeout.
+
+Há um menu intuitivo para o uso do client.
