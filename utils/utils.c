@@ -70,13 +70,17 @@ int sendPacket(int sok, struct sockaddr_ll end, unsigned char *buffer){
 		sendto(sok, buffer, sizeof(struct frame), 0, (struct sockaddr*)&end, sizeof(end));
         type = waitforACK(sok, end, awnserFrame, awnserBuffer);
         if(type == TIMEOUT){
+	    free(awnserBuffer);
             fprintf(stderr, "Timed out.\n");
             return TIMEOUT;
         }
-        if(type == ERROR)
+        if(type == ERROR){
+	    free(awnserBuffer);
             return ERROR;
+	}
 	} while (type != ACK);
-        
+
+    free(awnserBuffer);
     return ACK;
 }
 
